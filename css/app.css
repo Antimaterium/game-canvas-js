@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #cccccc;
+  text-align: center;
+}
+
+canvas {
+  margin-top: 50px;
+  background-color: black;
+}
+
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#restart {
+  width: 100px;
+  height: 30px;
+  margin: 0 auto;
+  position: relative;
+  top: 48vh;
+  border: solid 2px #ff5200;
+  background: #ffd400;
+  border-radius: 4px;
+  display: none;
+}
