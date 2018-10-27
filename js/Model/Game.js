@@ -2,25 +2,34 @@
   'use strict';
   class Game {
     constructor() {
-      this.canvas = document.getElementById('my-canvas');
-      this.restartButton = document.getElementById('restart');
-      this.scoreElement = document.getElementById('score');
-      this.ctx = this.canvas.getContext('2d');
-      this.looper;
-      this.enemyesStore = [];
       this.score = 0;
       this.frames = 0;
+      this.looper;
       this.isPlaying;
       this.isGameOver;
-      this.hero = new Hero(this.canvas, this.ctx);
+      this.enemyesStore = [];
+
+      this.$canvas = document.querySelector('#my-canvas');
+      this.ctx = this.$canvas.getContext('2d');
+      this.$restartButton = document.querySelector('#restart');
+      
+      this.hero = new Hero(this.$canvas, this.ctx);
       this.character = new Character();
       this.primarySound = new Audio('./sounds/primary-bg-sound.mp3');
       this.secondarySound = new Audio('./sounds/secondary-bg-sound.mp3');
+      this.primarySound.volume = 0.06;
+      this.secondarySound.volume = 0.06;
       this.bind();
 
-      //this.primarySound.play();
+      document.querySelector('#start').addEventListener('click', this.startGame, false);
+    }
+
+    startGame( event ) {
+      this.primarySound.play();
+      event.target.style.display = 'none';
+      this.startLooper();
       window.addEventListener('keydown', this.handleKeys);
-      window.addEventListener('click', this.restart);
+      this.$restartButton.addEventListener('click', this.restart);
       this.primarySound.addEventListener('ended', this.playPrimaryMusic, false);
       this.secondarySound.addEventListener('ended', this.playSecondaryMusic, false);
     }
@@ -41,7 +50,7 @@
     }
 
     resetCanvas() {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
     }
 
     createEnemy() {
@@ -70,59 +79,75 @@
     renderScore() {
       this.ctx.font = '16px Arial';
       this.ctx.fillStyle = '#0095DD';
-      this.ctx.fillText('Score: ' + this.score, this.canvas.width - 100, 20);
+      this.ctx.fillText(`Score: ${this.score}`, this.$canvas.width - 100, 20);
     }
 
     gameOver() {
-      clearInterval(this.looper);
+      this.stopLoop();
       this.ctx.font = '20px Verdana';
       this.ctx.fillStyle = 'white';
       this.ctx.fillText('GAME OVER', 185, 220);
-      this.isPlaying = false;
-      this.isGameOver = true;
-      this.restartButton.style.display = 'block';
+      this.updateGameState();
+      this.$restartButton.style.display = 'block';
     };
 
     restart() {
+      console.log('lksaldksalkd');
       this.enemyesStore.splice(0, this.enemyesStore.length);
-      this.restartButton.style.display = 'none';
+      this.$restartButton.style.display = 'none';
       this.score = 0;
       this.startLooper();
+      this.updateGameState();
     };
 
     handleKeys({ keyCode }) {
       if (keyCode === 37 && this.isPlaying) {
         if (this.hero.x <= 0)
           return;
-        this.hero.x -= this.hero.size;
+        this.hero.x -= this.character.size;
       }
       if (keyCode === 39 && this.isPlaying) {
-        if (this.hero.x >= this.canvas.width - this.hero.size)
+        if (this.hero.x >= this.$canvas.width - this.character.size)
           return;
-        this.hero.x += this.hero.size;
+        this.hero.x += this.character.size;
       }
       if (keyCode === 32 && !this.isGameOver) {
-        if (this.isPlaying) {
-          clearInterval(this.looper);
-          this.isPlaying = false;
-        } else {
-          this.startLooper();
-          this.isPlaying = true;
-        }
-      } else if (keyCode === 32 && this.isGameOver)
-        this.restart();
+          this.handlePauseGame();
+      } else if (keyCode === 32 && this.isGameOver) {
+          this.restart();
+      }
     }
 
+    handlePauseGame() {
+      if(this.isPlaying) {
+        this.stopLoop();
+        this.isPlaying = false;
+      } else {
+        this.startLooper();
+        this.isPlaying = true;
+      }
+    }
     playPrimaryMusic() {
       this.secondarySound.play();
     }
+
     playSecondaryMusic() {
       this.primarySound.play();
+    }
+
+    stopLoop() {
+      clearInterval(this.looper)      
+    }
+
+    updateGameState() {
+      this.isPlaying = this.isPlaying;
+      this.isGameOver = this.isGameOver;
     }
 
     bind() {
       this.render = this.render.bind(this)
       this.restart = this.restart.bind(this);
+      this.startGame = this.startGame.bind(this);
       this.handleKeys = this.handleKeys.bind(this);
       this.playPrimaryMusic = this.playPrimaryMusic.bind(this);
       this.playSecondaryMusic = this.playSecondaryMusic.bind(this);

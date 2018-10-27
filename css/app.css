@@ -19,14 +19,22 @@ div {
   align-items: center;
 }
 
-#restart {
+#restart, #start {
   width: 100px;
   height: 30px;
   margin: 0 auto;
   position: relative;
-  top: 48vh;
+  top: 34vh;
   border: solid 2px #ff5200;
   background: #ffd400;
   border-radius: 4px;
+  text-align: center;
+}
+
+#start {
+  display: block;
+}
+
+#restart {
   display: none;
 }
