@@ -12,6 +12,7 @@
       this.$canvas = document.querySelector('#my-canvas');
       this.ctx = this.$canvas.getContext('2d');
       this.$restartButton = document.querySelector('#restart');
+      //this.$scoreHistory = document.querySelector('.scoreHistory>ul');
       
       this.hero = new Hero(this.$canvas, this.ctx);
       this.character = new Character();
@@ -19,6 +20,9 @@
       this.secondarySound = new Audio('./sounds/secondary-bg-sound.mp3');
       this.primarySound.volume = 0.06;
       this.secondarySound.volume = 0.06;
+
+      this.scoreHistory = [];
+      localStorage.setItem('scoreHistory', JSON.stringify(this.scoreHistory));
       this.bind();
 
       document.querySelector('#start').addEventListener('click', this.startGame, false);
@@ -88,11 +92,11 @@
       this.ctx.fillStyle = 'white';
       this.ctx.fillText('GAME OVER', 185, 220);
       this.updateGameState();
+      this.updateScoreHistory();
       this.$restartButton.style.display = 'block';
     };
 
     restart() {
-      console.log('lksaldksalkd');
       this.enemyesStore.splice(0, this.enemyesStore.length);
       this.$restartButton.style.display = 'none';
       this.score = 0;
@@ -142,6 +146,22 @@
     updateGameState() {
       this.isPlaying = this.isPlaying;
       this.isGameOver = this.isGameOver;
+    }
+
+    updateScoreHistory() {
+      this.scoreHistory.push(this.score);
+      this.scoreHistory.sort((a, b) => a < b);
+      if(this.scoreHistory.length > 5) 
+        this.scoreHistory.shift();
+
+      //this.$scoreHistory.innerHTML = this.mapScoreHistoryToLi();
+      localStorage.setItem('scoreHistory',JSON.stringify(this.scoreHistory));
+    }
+
+    mapScoreHistoryToLi() {
+      return this.scoreHistory.map((score, index) => (
+        `<li><b>${index+1}°</b> ${score}</li>`
+      )).join('');
     }
 
     bind() {

@@ -23,8 +23,7 @@ div {
   width: 100px;
   height: 30px;
   margin: 0 auto;
-  position: relative;
-  top: 34vh;
+  position: relative;  
   border: solid 2px #ff5200;
   background: #ffd400;
   border-radius: 4px;
@@ -33,8 +32,10 @@ div {
 
 #start {
   display: block;
+  top: 34vh;
 }
 
 #restart {
   display: none;
-}
+  top: 36vh;
+} 
