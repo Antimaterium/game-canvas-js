@@ -13,8 +13,6 @@
       this.heroImage.src = 'images/player.gif';
     }
 
-
-
     draw() {
       if (this.x < 0) 
         this.x = 0;
@@ -22,8 +20,6 @@
       if (this.x > this.canvas.width - this.size)
         this.x = this.canvas.width - this.size;
 
-      //this.ctx.fillStyle = this.color;
-      //this.ctx.fillRect(this.x, this.y, this.size, this.size);  
       this.ctx.drawImage(this.heroImage, this.x, this.y, this.size, this.size);
     }
 

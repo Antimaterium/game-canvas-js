@@ -1,23 +1,14 @@
 (function () {
   'use strict';
-  class Game {
+  class Game extends Elements {
     constructor() {
+      super();
       this.score = 0;
       this.frames = 0;
       this.looper;
       this.isPlaying;
-      this.isGameOver;
+      this.isGameOver = false;
       this.enemyesStore = [];
-
-      this.$canvas = $('#my-canvas');
-      this.ctx = this.$canvas.getContext('2d');
-      this.$restartButton = $('#restart');
-      this.$controlButtons = $('.controlButtons');
-      this.$audioButton = document.createElement('img');
-      this.$audioButton.setAttribute('src', './images/high-volume.png');
-      this.$audioButton.setAttribute('class', 'icon');
-      this.$controlButtons.appendChild(this.$audioButton);
-      //this.$scoreHistory = $('.scoreHistory>ul');
       
       this.hero = new Hero(this.$canvas, this.ctx);
       this.character = new Character();
@@ -33,11 +24,10 @@
     }
 
     startGame( { target } ) {
-      this.primarySound.play();
+      // this.primarySound.play();
       target.style.display = 'none';
       this.startLooper();
       window.addEventListener('keydown', this.handleKeys);
-
       this.$audioButton.addEventListener('click', this.handleMusicState);
       this.$restartButton.addEventListener('click', this.restart);
       this.primarySound.addEventListener('ended', this.playPrimaryMusic, false);
@@ -100,15 +90,15 @@
       this.updateGameState();
       this.updateScoreHistory();
       this.$restartButton.style.display = 'block';
-    };
+    }
 
     restart() {
       this.enemyesStore.splice(0, this.enemyesStore.length);
       this.$restartButton.style.display = 'none';
       this.score = 0;
       this.startLooper();
-      this.updateGameState();
-    };
+      this.changeGameOverState();
+    }
 
     handleKeys({ keyCode }) {
       if (keyCode === 37 && this.isPlaying) {
@@ -149,9 +139,17 @@
       clearInterval(this.looper)      
     }
 
-    updateGameState() {
+    changeGameOverState() {
+      this.isGameOver = !this.isGameOver;
+    }
+
+    changeIsPlayingState() {
       this.isPlaying = this.isPlaying;
-      this.isGameOver = this.isGameOver;
+    }
+
+    updateGameState() {
+      this.changeGameOverState();
+      this.changeIsPlayingState();
     }
 
     updateScoreHistory() {
