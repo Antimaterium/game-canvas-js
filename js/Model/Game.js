@@ -9,28 +9,27 @@
       this.isGameOver;
       this.enemyesStore = [];
 
-      this.$canvas = document.querySelector('#my-canvas');
+      this.$canvas = $('#my-canvas');
       this.ctx = this.$canvas.getContext('2d');
-      this.$restartButton = document.querySelector('#restart');
-      //this.$scoreHistory = document.querySelector('.scoreHistory>ul');
+      this.$restartButton = $('#restart');
+      //this.$scoreHistory = $('.scoreHistory>ul');
       
       this.hero = new Hero(this.$canvas, this.ctx);
       this.character = new Character();
       this.primarySound = new Audio('./sounds/primary-bg-sound.mp3');
       this.secondarySound = new Audio('./sounds/secondary-bg-sound.mp3');
-      this.primarySound.volume = 0.06;
-      this.secondarySound.volume = 0.06;
+      this.setMusicVolume(0.04);
 
       this.scoreHistory = [];
       localStorage.setItem('scoreHistory', JSON.stringify(this.scoreHistory));
       this.bind();
 
-      document.querySelector('#start').addEventListener('click', this.startGame, false);
+      $('#start').addEventListener('click', this.startGame, false);
     }
 
-    startGame( event ) {
+    startGame( { target } ) {
       this.primarySound.play();
-      event.target.style.display = 'none';
+      target.style.display = 'none';
       this.startLooper();
       window.addEventListener('keydown', this.handleKeys);
       this.$restartButton.addEventListener('click', this.restart);
@@ -164,11 +163,17 @@
       )).join('');
     }
 
+    setMusicVolume(volume) {
+      this.primarySound.volume = volume;
+      this.secondarySound.volume = volume;
+    }
+
     bind() {
       this.render = this.render.bind(this)
       this.restart = this.restart.bind(this);
       this.startGame = this.startGame.bind(this);
       this.handleKeys = this.handleKeys.bind(this);
+      this.setMusicVolume = this.setMusicVolume.bind(this);
       this.playPrimaryMusic = this.playPrimaryMusic.bind(this);
       this.playSecondaryMusic = this.playSecondaryMusic.bind(this);
     }
