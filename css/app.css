@@ -38,4 +38,9 @@ div {
 #restart {
   display: none;
   top: 36vh;
-} 
+}
+
+.icon {
+  width: 20px;
+  cursor: pointer;
+}

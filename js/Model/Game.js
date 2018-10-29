@@ -12,6 +12,11 @@
       this.$canvas = $('#my-canvas');
       this.ctx = this.$canvas.getContext('2d');
       this.$restartButton = $('#restart');
+      this.$controlButtons = $('.controlButtons');
+      this.$audioButton = document.createElement('img');
+      this.$audioButton.setAttribute('src', './images/high-volume.png');
+      this.$audioButton.setAttribute('class', 'icon');
+      this.$controlButtons.appendChild(this.$audioButton);
       //this.$scoreHistory = $('.scoreHistory>ul');
       
       this.hero = new Hero(this.$canvas, this.ctx);
@@ -32,6 +37,8 @@
       target.style.display = 'none';
       this.startLooper();
       window.addEventListener('keydown', this.handleKeys);
+
+      this.$audioButton.addEventListener('click', this.handleMusicState);
       this.$restartButton.addEventListener('click', this.restart);
       this.primarySound.addEventListener('ended', this.playPrimaryMusic, false);
       this.secondarySound.addEventListener('ended', this.playSecondaryMusic, false);
@@ -168,6 +175,19 @@
       this.secondarySound.volume = volume;
     }
 
+    handleMusicState() {
+      if (this.primarySound.paused && this.secondarySound.paused) {
+        this.playSecondaryMusic();
+        this.$audioButton.setAttribute('src', './images/high-volume.png')
+      } else {
+        this.primarySound.pause();
+        this.primarySound.currentTime = 0;
+        this.secondarySound.pause();
+        this.secondarySound.currentTime = 0;
+        this.$audioButton.setAttribute('src', './images/mute-volume.png')
+      }
+    }
+
     bind() {
       this.render = this.render.bind(this)
       this.restart = this.restart.bind(this);
@@ -175,6 +195,7 @@
       this.handleKeys = this.handleKeys.bind(this);
       this.setMusicVolume = this.setMusicVolume.bind(this);
       this.playPrimaryMusic = this.playPrimaryMusic.bind(this);
+      this.handleMusicState = this.handleMusicState.bind(this);
       this.playSecondaryMusic = this.playSecondaryMusic.bind(this);
     }
   }
