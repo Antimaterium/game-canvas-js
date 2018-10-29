@@ -156,7 +156,7 @@
 
     updateScoreHistory() {
       this.scoreHistory.push(this.score);
-      this.scoreHistory.sort((a, b) => a < b);
+      this.scoreHistory.sort((a, b) => a > b);
       if(this.scoreHistory.length > 5) 
         this.scoreHistory.shift();
 
