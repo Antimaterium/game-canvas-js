@@ -25,7 +25,7 @@
       this.secondarySound = new Audio('./sounds/secondary-bg-sound.mp3');
       this.setMusicVolume(0.04);
 
-      this.scoreHistory = [];
+      this.scoreHistory = JSON.parse(localStorage.getItem('scoreHistory')) || [];
       localStorage.setItem('scoreHistory', JSON.stringify(this.scoreHistory));
       this.bind();
 
